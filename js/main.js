@@ -10,6 +10,7 @@ $(document).ready(function(){
       } else {
         console.log("Authenticated successfully with payload:", authData);
         $(".hidden").removeClass("hidden");
+        $("button#Login").addClass("hidden");
       }
     });
   });
