@@ -1,4 +1,4 @@
-var ref = new Firebase("https://cht3game.firebaseio.com/adsjfasdjfsadjfklasdfjlsdakfjalskdjfkldsaflk");
+var ref = new Firebase("https://keep-stuff.firebaseio.com/");
 var gameRef = ref.child("game");
 
 $(document).ready(function(){
@@ -15,6 +15,7 @@ $(document).ready(function(){
   $(".cell").on("click", function() {
     var currentMark = Game.currentMark();
     if (currentMark) {
+
       $(this).addClass(currentMark).text(currentMark);
     }
   });
@@ -30,7 +31,7 @@ Game.currentMark = function() {
     return 'o';
   }
   return null;
-}
+};
 
 // { gc1: 'x', gc2: 'o' ... }
 
@@ -59,7 +60,7 @@ Game.nextPlayer = function() {
     return 'o';
   }
   return null;
-}
+};
 
 var isNewUser = true;
 ref.onAuth(function(authData) {
