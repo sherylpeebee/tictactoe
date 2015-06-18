@@ -1,4 +1,4 @@
-var ref = new Firebase("https://cht3game.firebaseio.com");
+var ref = new Firebase("https://cht3game.firebaseio.com/adsjfasdjfsadjfklasdfjlsdakfjalskdjfkldsaflk");
 var gameRef = ref.child("game");
 
 $(document).ready(function(){
@@ -11,35 +11,59 @@ $(document).ready(function(){
       }
     });
   });
+
+  $(".cell").on("click", function() {
+    var currentMark = Game.currentMark();
+    if (currentMark) {
+      $(this).addClass(currentMark).text(currentMark);
+    }
+  });
 });
 
 var Game = {};
 
-Game.nextPlayer = function() {
-  if (!this.player1) {
-    return 'player1';
+Game.currentMark = function() {
+  if (Game.x === Game.currentUsername) {
+    return 'x';
   }
-  if (!this.player2) {
-    return 'player2';
+  if (Game.o === Game.currentUsername) {
+    return 'o';
   }
   return null;
 }
 
-gameRef.on("value", function(snap) {
+// { gc1: 'x', gc2: 'o' ... }
+
+gameRef.on("value", assignPlayers);
+
+function assignPlayers(snap) {
   var game = snap.val();
+  console.log("Snap Val:", game);
   if (!game) {
     return;
   }
   Game.players = game.players;
-  Game.player1 = game.players.player1;
-  Game.player2 = game.players.player2;
+  Game.x = game.players.x;
+  Game.o = game.players.o;
 
-  $("#first-player").text(Game.players.player1);
-  $("#second-player").text(Game.players.player2);
-});
+  $("#first-player").text(Game.players.x + " - X");
+  $("#second-player").text(Game.players.o + " - O");
+}
+
+Game.nextPlayer = function() {
+  console.log(this);
+  if (!this.x) {
+    return 'x';
+  }
+  if (!this.o) {
+    return 'o';
+  }
+  return null;
+}
 
 var isNewUser = true;
 ref.onAuth(function(authData) {
+  console.log("Auth:", authData);
   if (authData && isNewUser) {
     // save the user's profile into Firebase so we can list users,
     // use them in Security and Firebase Rules, and show profiles
@@ -47,13 +71,16 @@ ref.onAuth(function(authData) {
     //   provider: authData.provider,
     //   name: getName(authData)
     // });
-    $(".hidden").removeClass("hidden");
-    Game.currentUsername = authData.twitter.username;
-    var options = {}, nextPlayer = Game.nextPlayer();
-    if (nextPlayer) {
-      options[nextPlayer] = Game.currentUsername;
-      gameRef.child("players").update(options);
-    }
+    gameRef.once("value", function(snap) {
+      assignPlayers(snap);
+      Game.currentUsername = authData.twitter.username;
+      var options = {}, nextPlayer = Game.nextPlayer();
+      console.log(nextPlayer);
+      if (nextPlayer) {
+        options[nextPlayer] = Game.currentUsername;
+        gameRef.child("players").update(options);
+      }
+    });
   }
 });
 
