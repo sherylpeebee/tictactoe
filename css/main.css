@@ -96,6 +96,7 @@ textarea {
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
+
     body{
       font-family: 'Indie Flower', cursive;
       text-align: center;
@@ -127,17 +128,25 @@ textarea {
   border: 3px dashed aquamarine;
    }
 
-
-
-
-
-
-
-
-
-
-
-
+#game {
+  width: 100%;
+  height: 100%;
+}
+#game-container {
+  width: 45%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.game-square {
+  width: 33.33%;
+  border: 2px solid white;
+  background-color: orange;
+  margin: 0;
+  padding: 0 !important;
+}
+.app-title {
+  text-align: center;
+}
 
 /* ==========================================================================
    Helper classes

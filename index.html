@@ -9,11 +9,6 @@
 
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
         <!-- Place favicon.ico in the root directory -->
-        <!-- Latest compiled and minified CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-
-        <!-- Optional theme -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
@@ -27,12 +22,12 @@
 
         <!-- Add your site or application content here -->
         <h2>Tic-Tac-Toe</h2>
-        <button type="button" name="login" id="Login">Login</button>
-        <h3 class="player">
-          First player is <span id="first-player"></span>
-        </h3>
-        <h3 class="player">
-          Second player is <span id="second-player"></span>
+        <div id="btn-container">
+          <button type="button" name="play" class="button btn-md btn-primary">New Game</button>
+          <button type="button" name="login" class="btn btn-default" id="login">Login to Play</button>
+        </div>
+        <h3>
+          First player is x.
         </h3>
         <div class="wrapper row">
           <div class="row">
@@ -71,6 +66,7 @@
         </div>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="https://cdn.firebase.com/js/client/2.2.7/firebase.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.3.min.js"><\/script>')</script>
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>

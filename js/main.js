@@ -1,90 +1,45 @@
-var ref = new Firebase("https://keep-stuff.firebaseio.com/");
-var gameRef = ref.child("game");
+var ref = new Firebase('https://tic-tac-toe-trey.firebaseio.com/');
 
-$(document).ready(function(){
-  $("button#Login").on("click", function(){
-    ref.authWithOAuthPopup("twitter", function(error, authData) {
-      if (error) {
-        console.log("Login Failed!", error);
-      } else {
-        console.log("Authenticated successfully with payload:", authData);
-      }
-    });
-  });
+$(document).ready(init);
 
-  $(".cell").on("click", function() {
-    var currentMark = Game.currentMark();
-    if (currentMark) {
-
-      $(this).addClass(currentMark).text(currentMark);
-    }
-  });
-});
-
-var Game = {};
-
-Game.currentMark = function() {
-  if (Game.x === Game.currentUsername) {
-    return 'x';
-  }
-  if (Game.o === Game.currentUsername) {
-    return 'o';
-  }
-  return null;
-};
-
-// { gc1: 'x', gc2: 'o' ... }
-
-gameRef.on("value", assignPlayers);
-
-function assignPlayers(snap) {
-  var game = snap.val();
-  console.log("Snap Val:", game);
-  if (!game) {
-    return;
-  }
-  Game.players = game.players;
-  Game.x = game.players.x;
-  Game.o = game.players.o;
-
-  $("#first-player").text(Game.players.x + " - X");
-  $("#second-player").text(Game.players.o + " - O");
+function init(){
+  $('#login').on('click', loginClicked);
 }
 
-Game.nextPlayer = function() {
-  console.log(this);
-  if (!this.x) {
-    return 'x';
+function loginClicked(){
+  ref.authWithOAuthPopup("twitter", authHandler);
+}
+
+function authHandler(error, authData) {
+  if (error) {
+    console.log("Login Failed!", error);
+  } else {
+    console.log("Authenticated successfully with payload:", authData);
   }
-  if (!this.o) {
-    return 'o';
-  }
-  return null;
-};
+}
 
 var isNewUser = true;
+
+
 ref.onAuth(function(authData) {
-  console.log("Auth:", authData);
   if (authData && isNewUser) {
     // save the user's profile into Firebase so we can list users,
     // use them in Security and Firebase Rules, and show profiles
-    // ref.child("users").child(authData.uid).set({//nested children of root -- this is kind of schema setup.
-    //   provider: authData.provider,
-    //   name: getName(authData)
-    // });
-    gameRef.once("value", function(snap) {
-      assignPlayers(snap);
-      Game.currentUsername = authData.twitter.username;
-      var options = {}, nextPlayer = Game.nextPlayer();
-      console.log(nextPlayer);
-      if (nextPlayer) {
-        options[nextPlayer] = Game.currentUsername;
-        gameRef.child("players").update(options);
-      }
+    ref.child("users").child(authData.uid).set({
+      provider: authData.provider,
+      name: getName(authData)
+    });
+  }
+  console.log("authed", authData);
+  if (authData) {
+    $("#login").hide();
+    ref.once("value", function() {
+      $("#btn-container").append("Welcome " + getName(authData) + "!" );
     });
   }
 });
 
+// find a suitable name based on the meta info given by each provider
 function getName(authData) {
   switch(authData.provider) {
      case 'password':
